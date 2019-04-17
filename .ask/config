@@ -1,0 +1,33 @@
+{
+  "deploy_settings": {
+    "default": {
+      "skill_id": "amzn1.ask.skill.a96bf545-8abc-4dda-a235-a33396f57710",
+      "resources": {
+        "lambda": [
+          {
+            "alexaUsage": [
+              "custom/default"
+            ],
+            "arn": "arn:aws:lambda:us-east-1:712288589742:function:ask-custom-cityGuide-default",
+            "awsRegion": "us-east-1",
+            "codeUri": "lambda/py/lambda_upload",
+            "functionName": "ask-custom-cityGuide-default",
+            "handler": "lambda_function.lambda_handler",
+            "revisionId": "ae0d8a27-01c1-4cc9-96b4-89d6d4500b95",
+            "runtime": "python3.6"
+          }
+        ],
+        "manifest": {
+          "eTag": "1515b5c068475c968c7b0f8dfec00596"
+        },
+        "interactionModel": {
+          "en-US": {
+            "eTag": "00f9e3b3918cd99563fe3645971dfba9"
+          }
+        }
+      },
+      "was_cloned": false,
+      "merge": {}
+    }
+  }
+}

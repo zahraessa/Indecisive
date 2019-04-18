@@ -1,7 +1,7 @@
 {
   "interactionModel": {
     "languageModel": {
-      "invocationName": "city guide",
+      "invocationName": "indecisive",
       "intents": [
         {
           "name": "AboutIntent",
@@ -11,8 +11,6 @@
           ],
           "slots": []
         },
-
-
         {
           "name": "GetCityIntent",
           "samples": [
@@ -36,6 +34,63 @@
             }
           ]
         },
+        {
+          "name": "AddDietaryRequirementsIntent",
+          "samples": [
+            "remember {person} is a {dietary_req}",
+            "remember {person} is {dietary_req}",
+  			"{person} is a {dietary_req}",
+  			"{person} is {dietary_req}",
+            "remember i am a {dietary_req}",
+			"remember i am {dietary_req}",
+            "i am a {dietary_req}",
+			"i am {dietary_req}"
+          ],
+          "slots": [
+            {
+              "name": "person",
+              "type": "AMAZON.GB_FIRST_NAME",
+              "samples": []
+            },
+            {
+              "name": "dietary_req",
+              "type": "AMAZON.GB_FIRST_NAME",
+              "samples": []
+            }
+          ]
+        },
+        {
+          "name": "GetDietaryRequirementsIntent",
+          "samples": [
+            "does {person} have any dietary requirements",
+            "is there anything {person} can't eat",
+            "what can't {person} eat"
+          ],
+          "slots": [
+              {
+                "name": "person",
+                "type": "AMAZON.GB_FIRST_NAME",
+                "samples": []
+              }
+          ]
+        },
+
+        {
+          "name": "SearchRestaurantsIntent",
+          "slots": [],
+          "samples": [
+            "search",
+            "alexa find me some food using indecisive"
+          ]
+        },
+        {
+          "name": "AnotherRestaurantsIntent",
+          "slots": [],
+          "samples": [
+            "another"
+          ]
+        },
+
         {
           "name": "AMAZON.YesIntent",
           "samples": []

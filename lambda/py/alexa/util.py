@@ -5,6 +5,8 @@ from ask_sdk_model import IntentRequest
 from typing import Union, Dict, List
 
 
+SEARCH_LIMIT = 10
+
 def get_restaurants_by_meal(city_data, meal_type):
     """Return a restaurant list based on meal type."""
     # type: (Dict, str) -> List
@@ -67,3 +69,23 @@ def get_resolved_value(request, slot_name):
         return request.intent.slots[slot_name].value
     except (AttributeError, ValueError, KeyError, IndexError):
         return None
+
+
+def search(host, path, api_key, location, offset=0):
+
+    url = '{0}{1}'.format(host, quote(path.encode('utf8')))
+    headers = {
+        'Authorization': 'Bearer %s' % api_key,
+    }
+
+    url_params = {
+        'location': location,
+        'limit': SEARCH_LIMIT,
+        'offset': offset * SEARCH_LIMIT
+    }
+
+    # print(u'Querying {0} ...'.format(url))
+
+    response = requests.request('GET', url, headers=headers, params=url_params)
+
+    return response.json()

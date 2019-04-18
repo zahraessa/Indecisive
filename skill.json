@@ -5,12 +5,12 @@
         "en-US": {
           "summary": "Ask an expert for a recommendation on what to do in your city.",
           "examplePhrases": [
-            "Alexa open city guide",
-            "Alexa tell city guide i'm hungry",
-            "Alexa ask city guide to give me an activity"
+            "Alexa open indecisive",
+            "Alexa tell Indecisive i'm hungry",
+            "Alexa ask Indecisive to tell me where to eat"
           ],
-          "name": "cityGuide",
-          "description": "Ask an expert for a recommendation on what to do in your city. You can even ask for tips within a specific distance."
+          "name": "Indecisive",
+          "description": "Ask an expert for a recommendation on where to eat. You can even ask for tips within a specific distance, price range and based on dietary requirements."
         }
       },
       "isAvailableWorldwide": true,

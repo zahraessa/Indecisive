@@ -3,13 +3,21 @@
 # Resolving gettext as _ for module loading.
 from gettext import gettext as _
 
-SKILL_NAME = "Gloucester Guide"
+SKILL_NAME = "Indecisive"
+
+API_KEY= '2S9dXI4xIQvEu49SfG041kn70KkZdAi4stYXPKDeVs-03x2Fg4w93NEl-91Ok_EVR5N5slLCwdnBqca-O1XMW4-eM3nierV30pxSpZqfHo1z6sCg4KTbMNZu2_y1XHYx'
+API_HOST= 'https://api.yelp.com'
+SEARCH_PATH= '/v3/businesses/search'
+BUSINESS_PATH= '/v3/businesses/'
+
+DEFAULT_LOCATION = 'London, UK'
+
 
 WELCOME = _("Welcome to Indecisive!")
-HELP = _("Say about, to hear more about the city, or say coffee, breakfast, lunch, or dinner, to hear local restaurant suggestions, or say recommend an attraction, or say, go outside. ")
-ABOUT = _("Gloucester Massachusetts is a city on the Atlantic Ocean. A popular summer beach destination, Gloucester has a rich history of fishing and ship building.")
+HELP = _("You can add a location and find where to eat.")
+ABOUT = _("We help you decide where to eat")
 STOP = _("Okay, see you next time!")
-FALLBACK = _("The {} can't help you with that. It can help you learn about Gloucester if you say tell me about this place. What can I help you with?")
+FALLBACK = _("The {} can't help you with that.")
 GENERIC_REPROMPT = _("What can I help you with?")
 
 CITY_DATA = {

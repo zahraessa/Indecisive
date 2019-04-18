@@ -14,7 +14,128 @@
 
         {
           "name": "CoffeeIntent",
+          "samples": [{
+  "interactionModel": {
+    "languageModel": {
+      "invocationName": "indecisive",
+      "intents": [
+        {
+          "name": "AboutIntent",
           "samples": [
+            "about",
+            "tell me about this place"
+          ],
+          "slots": []
+        },
+        {
+          "name": "GetCityIntent",
+          "samples": [
+            "where am I",
+            "Where do you think I am",
+            "remind me where I am"
+          ],
+          "slots": []
+        },
+        {
+          "name": "AddCityIntent",
+          "samples": [
+            "I am in {city}",
+            "I live in {city}"
+          ],
+          "slots": [
+            {
+              "name": "city",
+              "type": "AMAZON.GB_CITY",
+              "samples": []
+            }
+          ]
+        },
+        {
+          "name": "AddDietaryRequirementsIntent",
+          "samples": [
+            "remember {person} is a {dietary_req}",
+            "remember {person} is {dietary_req}",
+  			"{person} is a {dietary_req}",
+  			"{person} is {dietary_req}",
+            "remember i am a {dietary_req}",
+			"remember i am {dietary_req}",
+            "i am a {dietary_req}",
+			"i am {dietary_req}"
+          ],
+          "slots": [
+            {
+              "name": "person",
+              "type": "AMAZON.GB_FIRST_NAME",
+              "samples": []
+            },
+            {
+              "name": "dietary_req",
+              "type": "AMAZON.GB_FIRST_NAME",
+              "samples": []
+            }
+          ]
+        },
+        {
+          "name": "GetDietaryRequirementsIntent",
+          "samples": [
+            "does {person} have any dietary requirements",
+            "is there anything {person} can't eat",
+            "what can't {person} eat"
+          ],
+          "slots": [
+              {
+                "name": "person",
+                "type": "AMAZON.GB_FIRST_NAME",
+                "samples": []
+              }
+          ]
+        },
+
+        {
+          "name": "SearchRestaurantsIntent",
+          "slots": [],
+          "samples": [
+            "search",
+            "alexa find me some food using indecisive"
+          ]
+        },
+        {
+          "name": "AnotherRestaurantsIntent",
+          "slots": [],
+          "samples": [
+            "another"
+          ]
+        },
+
+        {
+          "name": "AMAZON.YesIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.NoIntent",
+          "samples": []
+        },
+
+        {
+          "name": "AMAZON.HelpIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.StopIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.CancelIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.FallbackIntent",
+          "samples": []
+        }
+      ]
+    }
+  }
+}
             "coffee"
           ],
           "slots": []

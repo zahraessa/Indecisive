@@ -3,8 +3,7 @@ from boto3.dynamodb.conditions import Key, Attr
 
 client = boto3.client('dynamodb')
 
-ddb = boto3.resource('dynamodb', aws_access_key_id='', aws_secret_access_key='')
-#ddb = boto3.resource('dynamodb')
+ddb = boto3.resource('dynamodb')
 
 loc_table = ddb.Table('locations')
 people_table = ddb.Table('people')

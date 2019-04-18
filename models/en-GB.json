@@ -1,230 +1,518 @@
 {
-  "interactionModel": {
-    "languageModel": {
-      "invocationName": "city guide",
-      "intents": [
-        {
-          "name": "AboutIntent",
-          "samples": [
-            "about",
-            "tell me about this place"
-          ],
-          "slots": []
-        },
+   "interactionModel":{
+      "languageModel":{
+         "invocationName":"indecisive",
+         "intents":[
+            {
+               "name":"AboutIntent",
+               "slots":[
 
-        {
-          "name": "CoffeeIntent",
-          "samples": [{
-  "interactionModel": {
-    "languageModel": {
-      "invocationName": "indecisive",
-      "intents": [
-        {
-          "name": "AboutIntent",
-          "samples": [
-            "about",
-            "tell me about this place"
-          ],
-          "slots": []
-        },
-        {
-          "name": "GetCityIntent",
-          "samples": [
-            "where am I",
-            "Where do you think I am",
-            "remind me where I am"
-          ],
-          "slots": []
-        },
-        {
-          "name": "AddCityIntent",
-          "samples": [
-            "I am in {city}",
-            "I live in {city}"
-          ],
-          "slots": [
-            {
-              "name": "city",
-              "type": "AMAZON.GB_CITY",
-              "samples": []
-            }
-          ]
-        },
-        {
-          "name": "AddDietaryRequirementsIntent",
-          "samples": [
-            "remember {person} is a {dietary_req}",
-            "remember {person} is {dietary_req}",
-  			"{person} is a {dietary_req}",
-  			"{person} is {dietary_req}",
-            "remember i am a {dietary_req}",
-			"remember i am {dietary_req}",
-            "i am a {dietary_req}",
-			"i am {dietary_req}"
-          ],
-          "slots": [
-            {
-              "name": "person",
-              "type": "AMAZON.GB_FIRST_NAME",
-              "samples": []
+               ],
+               "samples":[
+                  "about",
+                  "tell me about this place"
+               ]
             },
             {
-              "name": "dietary_req",
-              "type": "AMAZON.GB_FIRST_NAME",
-              "samples": []
-            }
-          ]
-        },
-        {
-          "name": "GetDietaryRequirementsIntent",
-          "samples": [
-            "does {person} have any dietary requirements",
-            "is there anything {person} can't eat",
-            "what can't {person} eat"
-          ],
-          "slots": [
-              {
-                "name": "person",
-                "type": "AMAZON.GB_FIRST_NAME",
-                "samples": []
-              }
-          ]
-        },
+               "name":"GetCityIntent",
+               "slots":[
 
-        {
-          "name": "SearchRestaurantsIntent",
-          "slots": [],
-          "samples": [
-            "search",
-            "alexa find me some food using indecisive"
-          ]
-        },
-        {
-          "name": "AnotherRestaurantsIntent",
-          "slots": [],
-          "samples": [
-            "another"
-          ]
-        },
-
-        {
-          "name": "AMAZON.YesIntent",
-          "samples": []
-        },
-        {
-          "name": "AMAZON.NoIntent",
-          "samples": []
-        },
-
-        {
-          "name": "AMAZON.HelpIntent",
-          "samples": []
-        },
-        {
-          "name": "AMAZON.StopIntent",
-          "samples": []
-        },
-        {
-          "name": "AMAZON.CancelIntent",
-          "samples": []
-        },
-        {
-          "name": "AMAZON.FallbackIntent",
-          "samples": []
-        }
-      ]
-    }
-  }
-}
-            "coffee"
-          ],
-          "slots": []
-        },
-        {
-          "name": "BreakfastIntent",
-          "samples": [
-            "breakfast"
-          ],
-          "slots": []
-        },
-        {
-          "name": "LunchIntent",
-          "samples": [
-            "lunch"
-          ],
-          "slots": []
-        },
-        {
-          "name": "DinnerIntent",
-          "samples": [
-            "dinner"
-          ],
-          "slots": []
-        },
-        {
-          "name": "AddCityIntent",
-          "samples": [
-            "I live in {place}"
-          ],
-          "slots": [
+               ],
+               "samples":[
+                  "where am I",
+                  "Where do you think I am",
+                  "remind me where I am"
+               ]
+            },
             {
-              "name": "place",
-              "type": "AMAZON.LITERAL",
-              "samples": []
-            }
-          ]
-        },
-        {
-          "name": "AttractionIntent",
-          "samples": [
-            "give me an activity within {distance} mile",
-            "recommend an attraction within {distance} mile",
-            "attraction",
-            "recommend an attraction",
-            "recommend an attraction within {distance} miles",
-            "give me an activity",
-            "give me an activity within {distance} miles"
-          ],
-          "slots": [
+               "name":"AddCityIntent",
+               "slots":[
+                  {
+                     "name":"city",
+                     "type":"AMAZON.GB_CITY"
+                  }
+               ],
+               "samples":[
+                  "I am in {city}",
+                  "I live in {city}"
+               ]
+            },
             {
-              "name": "distance",
-              "type": "AMAZON.NUMBER",
-              "samples": []
+               "name":"AddDietaryRequirementsIntent",
+               "slots":[
+                  {
+                     "name":"person",
+                     "type":"AMAZON.GB_FIRST_NAME"
+                  },
+                  {
+                     "name":"dietary_req",
+                     "type":"DIETARY_REQUIREMENTS"
+                  }
+               ],
+               "samples":[
+                  "remember {person} is a {dietary_req}",
+                  "remember {person} is {dietary_req}",
+                  "remember {person} has {dietary_req}",
+                  "remember {person} {dietary_req}",
+                  "{person} is a {dietary_req}",
+                  "{person} is {dietary_req}",
+                  "{person} has {dietary_req}",
+                  "{person} {dietary_req}",
+                  "remember i am a {dietary_req}",
+                  "remember i am {dietary_req}",
+                  "remember i have {dietary_req}",
+                  "remember i {dietary_req}",
+                  "i am a {dietary_req}",
+                  "i am {dietary_req}",
+                  "i have {dietary_req}",
+                  "i {dietary_req}"
+               ]
+            },
+            {
+               "name":"GetDietaryRequirementsIntent",
+               "slots":[
+                  {
+                     "name":"person",
+                     "type":"AMAZON.GB_FIRST_NAME"
+                  }
+               ],
+               "samples":[
+                  "does {person} have any dietary requirements",
+                  "is there anything {person} can't eat",
+                  "what can't {person} eat",
+                  "do i have any dietary requirements",
+                  "is there anything i can't eat",
+                  "what can't i eat"
+               ]
+            },
+            {
+               "name":"AddLikedRestaurantsIntent",
+               "samples":[
+                  "i love that place",
+                  "i love that restaurant",
+                  "that's one of my favorites",
+                  "that restaurant is one of my favorites",
+                  "that place is one of my favorites",
+                  "i liked the last restaurant",
+                  "i liked the restaurant last night",
+                  "i liked the restaurant yesterday",
+                  "i liked the restaurant you sent me to",
+                  "i liked the food",
+                  "i liked the food last night",
+                  "i liked the food yesterday",
+                  "i enjoyed the last restaurant",
+                  "i enjoyed the restaurant last night",
+                  "i enjoyed the restaurant yesterday",
+                  "i enjoyed the restaurant you sent me to",
+                  "i enjoyed the food",
+                  "i enjoyed the food last night",
+                  "i enjoyed the food yesterday",
+                  "the restaurant you sent me to was good",
+                  "the restaurant you sent me to was really good",
+                  "the last restaurant you sent me to was good",
+                  "the last restaurant you sent me to was really good",
+                  "the restaurant you sent me to yesterday was good",
+                  "the restaurant you sent me to yesterday was really good",
+                  "{person} liked the last restaurant",
+                  "{person} liked the restaurant last night",
+                  "{person} liked the restaurant yesterday",
+                  "{person} liked the restaurant you sent me to",
+                  "{person} liked the food",
+                  "{person} liked the food last night",
+                  "{person} liked the food yesterday",
+                  "{person} enjoyed the last restaurant",
+                  "{person} enjoyed the restaurant last night",
+                  "{person} enjoyed the restaurant yesterday",
+                  "{person} enjoyed the restaurant you sent me to",
+                  "{person} enjoyed the food",
+                  "{person} enjoyed the food last night",
+                  "{person} enjoyed the food yesterday",
+                  "the restaurant you sent {person} to was good",
+                  "the restaurant you sent {person} to was really good",
+                  "the last restaurant you sent {person} to was good",
+                  "the last restaurant you sent {person} to was really good",
+                  "the restaurant you sent {person} to yesterday was good",
+                  "the restaurant you sent {person} to yesterday was really good",
+                  "the restaurant yesterday was good",
+                  "the restaurant yesterday was really good"
+               ],
+               "slots":[
+                  {
+                     "name":"person",
+                     "type":"AMAZON.GB_FIRST_NAME",
+                     "samples":[
+
+                     ]
+                  }
+               ]
+            },
+            {
+               "name":"AddDisikedRestaurantsIntent",
+               "samples":[
+                  "i don't like that place",
+                  "i don't like that restaurant",
+                  "i hate that place",
+                  "i hate that restaurant",
+                  "i didn't like the last restaurant",
+                  "i didn't like the restaurant last night",
+                  "i didn't like the restaurant yesterday",
+                  "i didn't like the restaurant you sent me to",
+                  "i didn't like the food",
+                  "i didn't like the food last night",
+                  "i didn't like the food yesterday",
+                  "i disliked the last restaurant",
+                  "i disliked the restaurant last night",
+                  "i disliked the restaurant yesterday",
+                  "i disliked the restaurant you sent me to",
+                  "i disliked the food",
+                  "i disliked the food last night",
+                  "i disliked the food yesterday",
+                  "i didn't enjoy the last restaurant",
+                  "i didn't enjoy the restaurant last night",
+                  "i didn't enjoy the restaurant yesterday",
+                  "i didn't enjoy the restaurant you sent me to",
+                  "i didn't enjoy the food",
+                  "i didn't enjoy the food last night",
+                  "i didn't enjoy the food yesterday",
+                  "the restaurant you sent me to was bad",
+                  "the restaurant you sent me to was really bad",
+                  "the last restaurant you sent me to was bad",
+                  "the last restaurant you sent me to was really bad",
+                  "the restaurant you sent me to yesterday was bad",
+                  "the restaurant you sent me to yesterday was really bad",
+                  "{person} didn't like the last restaurant",
+                  "{person} didn't like the restaurant last night",
+                  "{person} didn't like the restaurant yesterday",
+                  "{person} didn't like the restaurant you sent me to",
+                  "{person} didn't like the food",
+                  "{person} didn't like the food last night",
+                  "{person} didn't like the food yesterday",
+                  "{person} disliked the last restaurant",
+                  "{person} disliked the restaurant last night",
+                  "{person} disliked the restaurant yesterday",
+                  "{person} disliked the restaurant you sent me to",
+                  "{person} disliked the food",
+                  "{person} disliked the food last night",
+                  "{person} disliked the food yesterday",
+                  "{person} didn't enjoy the last restaurant",
+                  "{person} didn't enjoy the restaurant last night",
+                  "{person} didn't enjoy the restaurant yesterday",
+                  "{person} didn't enjoy the restaurant you sent me to",
+                  "{person} didn't enjoy the food",
+                  "{person} didn't enjoy the food last night",
+                  "{person} didn't enjoy the food yesterday",
+                  "the restaurant you sent {person} to was bad",
+                  "the restaurant you sent {person} to was really bad",
+                  "the last restaurant you sent {person} to was bad",
+                  "the last restaurant you sent {person} to was really bad",
+                  "the restaurant you sent {person} to yesterday was bad",
+                  "the restaurant you sent {person} to yesterday was really bad",
+                  "the restaurant yesterday was bad",
+                  "the restaurant yesterday was really bad"
+               ],
+               "slots":[
+                  {
+                     "name":"person",
+                     "type":"AMAZON.GB_FIRST_NAME",
+                     "samples":[
+
+                     ]
+                  }
+               ]
+            },
+            {
+               "name":"GetLikedRestaurantsIntent",
+               "samples":[
+                  "what places do i like to eat",
+                  "what places do i like eating",
+                  "what places do i enjoy to eat",
+                  "what places do i enjoy eating",
+                  "where do i like to eat",
+                  "where do i like eating",
+                  "where do i enjoy to eat",
+                  "where do i enjoy eating",
+                  "what places does {person} like to eat",
+                  "what places does {person} like eating",
+                  "what places does {person} enjoy to eat",
+                  "what places does {person} enjoy eating",
+                  "where does {person} like to eat",
+                  "where does {person} like eating",
+                  "where does {person} enjoy to eat",
+                  "where does {person} enjoy eating"
+               ],
+               "slots":[
+                  {
+                     "name":"person",
+                     "type":"AMAZON.GB_FIRST_NAME",
+                     "samples":[
+
+                     ]
+                  }
+               ]
+            },
+            {
+               "name":"GetDislikedRestaurantsIntent",
+               "samples":[
+                  "what places don't i like to eat",
+                  "what places don't i like eating",
+                  "what places don't i enjoy to eat",
+                  "what places don't i enjoy eating",
+                  "what places do i not like to eat",
+                  "what places do i not like eating",
+                  "what places do i not enjoy to eat",
+                  "what places do i not enjoy eating",
+                  "where don't i like to eat",
+                  "where don't i like eating",
+                  "where don't i enjoy to eat",
+                  "where don't i enjoy eating",
+                  "where do i not like to eat",
+                  "where do i not like eating",
+                  "where do i not enjoy to eat",
+                  "where do i not enjoy eating",
+                  "what places doesn't {person} like to eat",
+                  "what places doesn't {person} like eating",
+                  "what places doesn't {person} enjoy to eat",
+                  "what places doesn't {person} enjoy eating",
+                  "what places does {person} not like to eat",
+                  "what places does {person} not like eating",
+                  "what places does {person} not enjoy to eat",
+                  "what places does {person} not enjoy eating",
+                  "where doesn't {person} like to eat",
+                  "where doesn't {person} like eating",
+                  "where doesn't {person} enjoy to eat",
+                  "where doesn't {person} enjoy eating",
+                  "where does {person} not like to eat",
+                  "where does {person} not like eating",
+                  "where does {person} not enjoy to eat",
+                  "where does {person} not enjoy eating"
+               ],
+               "slots":[
+                  {
+                     "name":"person",
+                     "type":"AMAZON.GB_FIRST_NAME",
+                     "samples":[
+
+                     ]
+                  }
+               ]
+            },
+            {
+               "name":"MoreInfoIntent",
+               "slots":[
+
+               ],
+               "samples":[
+                  "more",
+                  "yes please tell me more",
+                  "yes please give me more",
+                  "please tell me more",
+                  "please give me more",
+                  "more info",
+                  "yes please tell me more info",
+                  "yes please give me more info",
+                  "please tell me more info",
+                  "please give me more info",
+                  "more information",
+                  "yes please tell me more information",
+                  "yes please give me more information",
+                  "please tell me more information",
+                  "please give me more information"
+               ]
+            },
+            {
+               "name":"SearchRestaurantsIntent",
+               "slots":[
+
+               ],
+               "samples":[
+                  "search",
+                  "alexa find me some food using indecisive",
+                  "i'm hungry",
+                  "where should i eat",
+                  "what should i eat",
+                  "suggest food",
+                  "search for food",
+                  "find food",
+                  "find me food",
+                  "suggest restaurants",
+                  "search for restaurants",
+                  "find restaurants",
+                  "find me restaurants",
+                  "suggest a restaurant",
+                  "search for a restaurant",
+                  "find a restaurant",
+                  "find me a restaurant"
+               ]
+            },
+            {
+               "name":"SearchRestaurantsWithFriendIntent",
+               "slots":[
+                  {
+                     "name":"person",
+                     "type":"AMAZON.GB_FIRST_NAME"
+                  }
+               ],
+               "samples":[
+                  "where should i eat with {person}",
+                  "search with {person}",
+                  "alexa find me some food to eat with {person} using indecisive",
+                  "{person} and i are hungry",
+                  "where should i eat with {person}",
+                  "what should i eat with {person}",
+                  "suggest food to eat with {person}",
+                  "search for food to eat with {person}",
+                  "find food to eat with {person}",
+                  "find me food to eat with {person}",
+                  "suggest restaurants to go to with {person}",
+                  "search for restaurants to go to with {person}",
+                  "find restaurants to go to with {person}",
+                  "find me restaurants to go to with {person}",
+                  "suggest a restaurant to go to with {person}",
+                  "search for a restaurant to go to with {person}",
+                  "find a restaurant to go to with {person}",
+                  "find me a restaurant to go to with {person}"
+               ]
+            },
+            {
+               "name":"AnotherRestaurantsIntent",
+               "slots":[
+
+               ],
+               "samples":[
+                  "another",
+                  "another please",
+                  "another suggestion",
+                  "give me another",
+                  "please give me another"
+               ]
+            },
+            {
+               "name":"AMAZON.YesIntent",
+               "samples":[
+
+               ]
+            },
+            {
+               "name":"AMAZON.NoIntent",
+               "samples":[
+
+               ]
+            },
+            {
+               "name":"AMAZON.HelpIntent",
+               "samples":[
+
+               ]
+            },
+            {
+               "name":"AMAZON.StopIntent",
+               "samples":[
+
+               ]
+            },
+            {
+               "name":"AMAZON.CancelIntent",
+               "samples":[
+
+               ]
+            },
+            {
+               "name":"AMAZON.FallbackIntent",
+               "samples":[
+
+               ]
+            },
+            {
+               "name":"AMAZON.NavigateHomeIntent",
+               "samples":[
+
+               ]
             }
-          ]
-        },
-
-        {
-          "name": "GoOutIntent",
-          "samples": [
-            "go out",
-            "go outside",
-            "lets go out"
-          ],
-          "slots": []
-        },
-        {
-          "name": "AMAZON.YesIntent",
-          "samples": []
-        },
-        {
-          "name": "AMAZON.NoIntent",
-          "samples": []
-        },
-
-        {
-          "name": "AMAZON.HelpIntent",
-          "samples": []
-        },
-        {
-          "name": "AMAZON.StopIntent",
-          "samples": []
-        },
-        {
-          "name": "AMAZON.CancelIntent",
-          "samples": []
-        }
-      ]
-    }
-  }
+         ],
+         "types":[
+            {
+               "name":"DIETARY_REQUIREMENTS",
+               "values":[
+                  {
+                     "name":{
+                        "value":"gluten free",
+                        "synonyms":[
+                           "celiac",
+                           "gluten free",
+                           "doesn't eat gluten",
+                           "don't eat gluten",
+                           "allergic to gluten",
+                           "can't eat gluten",
+                           "no gluten",
+                           "wheat free",
+                           "doesn't eat wheat",
+                           "don't eat wheat",
+                           "allergic to wheat",
+                           "can't eat wheat",
+                           "no wheat"
+                        ]
+                     }
+                  },
+                  {
+                     "name":{
+                        "value":"dairy free",
+                        "synonyms":[
+                           "lactose intolerant",
+                           "dairy free",
+                           "doesn't eat dairy",
+                           "doesn't drink milk",
+                           "don't drink milk",
+                           "don't eat dairy",
+                           "allergic to dairy",
+                           "can't eat dairy",
+                           "no dairy",
+                           "milk free",
+                           "doesn't eat milk",
+                           "doesn't drink milk",
+                           "don't eat milk",
+                           "don't drink milk",
+                           "allergic to milk",
+                           "can't eat milk",
+                           "can't drink milk",
+                           "no milk",
+                           "lactose free",
+                           "doesn't eat lactose",
+                           "don't eat lactose",
+                           "allergic to lactose",
+                           "can't eat lactose",
+                           "lactose free"
+                        ]
+                     }
+                  },
+                  {
+                     "name":{
+                        "value":"vegetarian",
+                        "synonyms":[
+                           "vegetarian",
+                           "meat free",
+                           "doesn't eat meat",
+                           "don't eat meat",
+                           "can't eat meat",
+                           "no meat"
+                        ]
+                     }
+                  },
+                  {
+                     "name":{
+                        "value":"vegan",
+                        "synonyms":[
+                           "vegan",
+                           "animal product free",
+                           "doesn't eat animal products",
+                           "don't eat animal products",
+                           "can't eat animal products",
+                           "no animal products"
+                        ]
+                     }
+                  }
+               ]
+            }
+         ]
+      }
+   }
 }

@@ -7,8 +7,13 @@
 # handle YES/NO intents with session attributes,
 # and return text data on a card.
 
+# can only suggest 2 things?
+# always responds in the same order
+
+
 import logging
 import gettext
+import random
 
 from ask_sdk_core.skill_builder import SkillBuilder
 from ask_sdk_core.handler_input import HandlerInput
@@ -28,7 +33,7 @@ sb = SkillBuilder()
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
-cuisine = ""
+#cuisine = ""
 
 # Request Handler classes
 class LaunchRequestHandler(AbstractRequestHandler):
@@ -115,61 +120,11 @@ class AddCityIntentHandler(AbstractRequestHandler):
             False)
         return handler_input.response_builder.response
 
-class GetDietaryRequirementsIntentHandler(AbstractRequestHandler):
-    """Handler for getting dietary requirements."""
-
-    def can_handle(self, handler_input):
-        # type: (HandlerInput) -> bool
-        return is_intent_name("GetDietaryRequirementsIntent")(handler_input)
-
-    def handle(self, handler_input):
-        # type: (HandlerInput) -> Response
-        logger.info("In GetDietaryRequirementsIntentHandler")
-
-        person = util.get_resolved_value(
-            handler_input.request_envelope.request, "person")
-        if person is None:
-            person = "your"
-        else:
-            req = ddb.getDietaryReq(person)
-            if len(req) != 0:
-                speech = ("{} dietary requirements are {}").format(person, req)
-            else:
-                speech = ("{} has no dietary requirements that I know of.").format(person)
-        handler_input.response_builder.speak(speech).set_should_end_session(
-            False)
-        return handler_input.response_builder.response
-
-
-class AddDietaryRequirementsIntentHandler(AbstractRequestHandler):
-    """Handler for adding dietary requirements."""
-
-    def can_handle(self, handler_input):
-        # type: (HandlerInput) -> bool
-        return is_intent_name("AddDietaryRequirementsIntent")(handler_input)
-
-    def handle(self, handler_input):
-        # type: (HandlerInput) -> Response
-        logger.info("In AddDietaryRequirementsIntentHandler")
-        person = util.get_resolved_value(
-            handler_input.request_envelope.request, "person")
-        if person is None:
-            person = "your"
-        dietary_req = util.get_resolved_value(
-            handler_input.request_envelope.request, "dietary_req")
-        speech = ("Okay. I'll remember that {} is {}.").format(person, dietary_req)
-
-        ddb.addDietaryReq(person, dietary_req)
-
-        handler_input.response_builder.speak(speech).set_should_end_session(
-            False)
-        return handler_input.response_builder.response
-
 class MoreInfoIntentHandler(AbstractRequestHandler):
     def can_handle(self, handler_input):
         # type: (HandlerInput) -> bool
         session_attr = handler_input.attributes_manager.session_attributes
-        return (is_intent_name("AMAZON.MoreRests")(handler_input) and
+        return (is_intent_name("MoreInfoIntent")(handler_input) and
                 "curr_restaurant" in session_attr)
 
     def handle(self, handler_input):
@@ -179,6 +134,7 @@ class MoreInfoIntentHandler(AbstractRequestHandler):
         attribute_manager = handler_input.attributes_manager
         session_attr = attribute_manager.session_attributes
         _ = attribute_manager.request_attributes["_"]
+        session_attr = attribute_manager.session_attributes
 
         restaurant_details = session_attr["curr_restaurant"]
         restaurant_categories = ", ".join(map(lambda x:x['title'], restaurant_details["categories"]))
@@ -188,51 +144,102 @@ class MoreInfoIntentHandler(AbstractRequestHandler):
                   "Alexa App on your phone.  Enjoy your meal! "
                   "<say-as interpret-as='interjection'>bon appetit</say-as>"
                   .format(restaurant_details["name"],
-                          restaurant_details["display_address"][0],
+                          restaurant_details["location"]["display_address"][0],
                           restaurant_details["rating"],
                           restaurant_categories))
         card_info = "{}\naddress: {}\nphone: {}\ncategoires: {}".format(
-            restaurant_details["name"], ", ".join(restaurant_details["display_address"]),
+            restaurant_details["name"], ", ".join(restaurant_details["location"]["display_address"]),
             restaurant_details["display_phone"], restaurant_categories)
 
         handler_input.response_builder.speak(speech).set_card(
             SimpleCard(
                 title=_(data.SKILL_NAME),
-                content=card_info)).set_should_end_session(True)
+                content=card_info)).set_should_end_session(False)
         return handler_input.response_builder.response
+
 
 
 class SearchRestaurantsIntentHandler(AbstractRequestHandler):
-    """Handler for skill launch."""
-
+    """Handler for find restaurant."""
     def can_handle(self, handler_input):
         # type: (HandlerInput) -> bool
-        return (is_request_type("SearchRestaurantsIntent")(handler_input))
+        return (is_intent_name("SearchRestaurantsIntent")(handler_input))
 
     def handle(self, handler_input):
         # type: (HandlerInput) -> Response
-        session_attr = handler_input.attributes_manager.session_attributes
         logger.info("In SearchRestaurantsIntentHandler")
+        attribute_manager = handler_input.attributes_manager
         _ = handler_input.attributes_manager.request_attributes["_"]
+        session_attr = attribute_manager.session_attributes
 
-        search_result = util.search(data.API_HOST, data.SEARCH_PATH, data.API_KEY, "London")['businesses']
+        place = ddb.getLocation()
+        if (place == "NOWHERE"):
+            speech = "I don't know where you are. "
+        else:
+            search_result = util.search(data.API_HOST, data.SEARCH_PATH, data.API_KEY, place)['businesses']
 
-        session_attr["num_of_search"] = 0
-        session_attr["curr_restaurant"] = search_result.pop(0)
-        session_attr["rest_restaurants"] = search_result
+            session_attr["num_of_search"] = 0
+            session_attr["curr_restaurant"] = search_result.pop(random.randrange(0,9,1))
+            session_attr["rest_restaurants"] = search_result
 
-        logger.info(session_attr["curr_restaurant"])
-        logger.info(session_attr["rest_restaurants"])
+            speech = ("I find a place nearby, called {}. "
+                    "Do you want more information about it?  "
+                    "Or do you want another suggestion? "
+                    "<say-as interpret-as='interjection'>bon appetit</say-as>"
+                    .format(session_attr["curr_restaurant"]["name"]))
+        handler_input.response_builder.speak(speech).set_should_end_session(False)
 
-        speech = ("I find a place nearyby, called {}. "
-                  "Do you want more information about it?  "
-                  "Or do you want another suggestion?"
-                  "<say-as interpret-as='interjection'>bon appetit</say-as>"
-                  .format(session_attr["curr_restaurant"]["name"]))
-
-        handler_input.response_builder.speak(speech).set_should_end_session(
-            False)
         return handler_input.response_builder.response
+
+class SearchRestaurantsWithFriendIntentHandler(AbstractRequestHandler):
+    """Handler for find restaurant with friend."""
+    def can_handle(self, handler_input):
+        # type: (HandlerInput) -> bool
+        return (is_intent_name("SearchRestaurantsWithFriendIntent")(handler_input))
+
+    def handle(self, handler_input):
+        # type: (HandlerInput) -> Response
+        logger.info("In SearchRestaurantsWithFriendIntentHandler")
+        attribute_manager = handler_input.attributes_manager
+        _ = handler_input.attributes_manager.request_attributes["_"]
+        session_attr = attribute_manager.session_attributes
+
+        place = ddb.getLocation()
+        if (place == "NOWHERE"):
+            speech = "I don't know where you are. "
+        else:
+            person = util.get_resolved_value(
+                handler_input.request_envelope.request, "person")
+
+            req = ddb.getDietaryReq(person)
+            if len(req) != 0:
+                dietaryList = req
+                if len(dietaryList) > 1:
+                    dietaryList.insert(len(dietaryList)-1, "and")
+
+                search_result = util.search(data.API_HOST, data.SEARCH_PATH, data.API_KEY, place,
+                                                   req)['businesses']
+                speech = "{} is {} ".format(person, dietaryList)
+            else:
+                search_result = util.search(data.API_HOST, data.SEARCH_PATH, data.API_KEY, place)['businesses']
+                speech = ""
+
+            session_attr["num_of_search"] = 0
+            session_attr["curr_restaurant"] = search_result.pop(random.randrange(0,9,1))
+            session_attr["rest_restaurants"] = search_result
+
+            # logger.info(session_attr["curr_restaurant"])
+            # logger.info(session_attr["rest_restaurants"])
+
+            speech = (speech + "I found a place nearby, called {}. "
+                               "Do you want more information about it?  "
+                               "Or do you want another suggestion? "
+                               "<say-as interpret-as='interjection'>bon appetit</say-as>"
+                               .format(session_attr["curr_restaurant"]["name"]))
+        handler_input.response_builder.speak(speech).set_should_end_session(False)
+
+        return handler_input.response_builder.response
+
 
 class AnotherRestaurantsIntentHandler(AbstractRequestHandler):
     """Handler for skill launch."""
@@ -240,40 +247,39 @@ class AnotherRestaurantsIntentHandler(AbstractRequestHandler):
         # type: (HandlerInput) -> bool
         attribute_manager = handler_input.attributes_manager
         session_attr = attribute_manager.session_attributes
-        return (is_request_type("AnotherRestaurantsIntent")(handler_input) and
-                "rest_restaurants" in session_attr)
+        logger.info(len(session_attr["rest_restaurants"]))
+        return (is_intent_name("AnotherRestaurantsIntent")(handler_input) and
+            "rest_restaurants" in session_attr)
 
     def handle(self, handler_input):
         # type: (HandlerInput) -> Response
-        attribute_manager = handler_input.attributes_manager
-        session_attr = attribute_manager.session_attributes
         logger.info("In AnotherRestaurantsIntentHandler")
+        attribute_manager = handler_input.attributes_manager
         _ = handler_input.attributes_manager.request_attributes["_"]
+        session_attr = attribute_manager.session_attributes
 
-        if not session_attr["rest_restaurants"]:
+        if not "rest_restaurants" in session_attr or not session_attr["rest_restaurants"]:
+            logger.info("rest_restaurants is empty")
             session_attr["num_of_search"] = session_attr["num_of_search"] + 1
-            search_result = util.search(data.API_HOST, data.SEARCH_PATH, data.API_KEY,
-                            session_attr["location"], session_attr["num_of_search"])['businesses']
+            session_attr["rest_restaurants"] = util.search(data.API_HOST, data.SEARCH_PATH, data.API_KEY,
+                            session_attr["location"], "", session_attr["num_of_search"])['businesses']
 
-        session_attr["curr_restaurant"] = search_result.pop()
-        session_attr["rest_restaurants"] = search_result
-
+        session_attr["curr_restaurant"] = session_attr["rest_restaurants"].pop(random.randrange(0,len(session_attr["rest_restaurants"])-1, 1))
         logger.info(session_attr["curr_restaurant"])
-        logger.info(session_attr["rest_restaurants"])
+        logger.info(len(session_attr["rest_restaurants"]))
 
-        speech = ("I find another place nearyby, called {}. "
+        speech = ("I find another place nearby, called {}. "
                   "Do you want more information about it?  "
                   "Or do you want another suggestion?"
                   "<say-as interpret-as='interjection'>bon appetit</say-as>"
                   .format(session_attr["curr_restaurant"]["name"]))
 
-        handler_input.response_builder.speak(speech).set_should_end_session(
-            False)
+        handler_input.response_builder.speak(speech).set_should_end_session(False)
+
         return handler_input.response_builder.response
 
-
-
 '''
+
 class AskIfWantSpecifyIntentHandler(AbstractRequestHandler):
     """Handler for adding AskIfWantSpecify intent."""
 
@@ -295,6 +301,8 @@ class AskIfWantSpecifyIntentHandler(AbstractRequestHandler):
         handler_input.response_builder.speak(speech).set_should_end_session(
             False)
         return handler_input.response_builder.response
+
+
 
 class AddRestaurantCuisineIntentHandler(AbstractRequestHandler):
     """Handler for adding AddRestaurantCuisine intent."""
@@ -496,6 +504,220 @@ class LocalizationInterceptor(AbstractRequestInterceptor):
             "_"] = i18n.gettext
 
 
+
+class GetLikedRestaurantsIntentHandler(AbstractRequestHandler):
+    """Handler for getting liked restaurants."""
+
+    def can_handle(self, handler_input):
+        # type: (HandlerInput) -> bool
+        return is_intent_name("GetLikedRestaurantsIntent")(handler_input)
+
+    def handle(self, handler_input):
+        # type: (HandlerInput) -> Response
+        logger.info("In GetLikedRestaurantsIntentHandler")
+
+        person = util.get_resolved_value(
+            handler_input.request_envelope.request, "person")
+        if person is None:
+            person = "you"
+        value = ddb.getLikedRestaurants(person)
+        if len(value) != 0:
+            speech = ("{} liked {}.").format(person, value)
+        else:
+            speech = ("None that I know of.")
+
+        handler_input.response_builder.speak(speech).set_should_end_session(
+            False)
+        return handler_input.response_builder.response
+
+
+class GetDislikedRestaurantsIntentHandler(AbstractRequestHandler):
+    """Handler for getting disliked restaurants."""
+
+    def can_handle(self, handler_input):
+        # type: (HandlerInput) -> bool
+        return is_intent_name("GetDislikedRestaurantsIntent")(handler_input)
+
+    def handle(self, handler_input):
+        # type: (HandlerInput) -> Response
+        logger.info("In GetDislikedRestaurantsIntentHandler")
+
+        person = util.get_resolved_value(
+            handler_input.request_envelope.request, "person")
+        if person is None:
+            person = "you"
+        value = ddb.getDislikedRestaurants(person)
+        if len(value) != 0:
+            speech = ("{} disliked {}.").format(person, value)
+        else:
+            speech = ("None that I know of.")
+
+        handler_input.response_builder.speak(speech).set_should_end_session(
+            False)
+        return handler_input.response_builder.response
+
+
+class GetDietaryRequirementsIntentHandler(AbstractRequestHandler):
+    """Handler for getting dietary requirements."""
+
+    def can_handle(self, handler_input):
+        # type: (HandlerInput) -> bool
+        return is_intent_name("GetDietaryRequirementsIntent")(handler_input)
+
+    def handle(self, handler_input):
+        # type: (HandlerInput) -> Response
+        logger.info("In GetDietaryRequirementsIntentHandler")
+
+        person = util.get_resolved_value(
+            handler_input.request_envelope.request, "person")
+        person_say = person + " is"
+        if person is None:
+            person = "you"
+            person_say = "you are"
+        value = ddb.getDietaryReq(person)
+        if len(value) != 0:
+            speech = ("{} {}").format(person_say, value)
+        else:
+            speech = ("None that I know of.")
+
+        handler_input.response_builder.speak(speech).set_should_end_session(
+            False)
+        return handler_input.response_builder.response
+
+
+class AddLikedRestaurantsIntentHandler(AbstractRequestHandler):
+    """Handler for adding liked restaurants."""
+
+    def can_handle(self, handler_input):
+        # type: (HandlerInput) -> bool
+        return is_intent_name("AddLikedRestaurantsIntent")(handler_input)
+
+    def handle(self, handler_input):
+        # type: (HandlerInput) -> Response
+        logger.info("In AddLikedRestaurantIntentHandler")
+        person = util.get_resolved_value(
+            handler_input.request_envelope.request, "person")
+        if person is None:
+            person = "you"
+        value = util.get_resolved_value(
+            handler_input.request_envelope.request, "restaurant")
+        if value is None:
+            value = ddb.getLastRestaurant(person)
+        speech = ("Okay. I'll remember that {} liked {}.").format(person, value)
+
+        ddb.addLikedRestaurant(person, value)
+
+        handler_input.response_builder.speak(speech).set_should_end_session(
+            False)
+        return handler_input.response_builder.response
+
+
+class AddDislikedRestaurantsIntentHandler(AbstractRequestHandler):
+    """Handler for adding disliked restaurants."""
+
+    def can_handle(self, handler_input):
+        # type: (HandlerInput) -> bool
+        return is_intent_name("AddDislikedRestaurantsIntent")(handler_input)
+
+    def handle(self, handler_input):
+        # type: (HandlerInput) -> Response
+        logger.info("In AddDislikedRestaurantIntentHandler")
+        person = util.get_resolved_value(
+            handler_input.request_envelope.request, "person")
+        if person is None:
+            person = "you"
+        value = util.get_resolved_value(
+            handler_input.request_envelope.request, "restaurant")
+        if value is None:
+            value = ddb.getLastRestaurant(person)
+        speech = ("Okay. I'll remember that {} disliked {}.").format(person, value)
+
+        ddb.addDislikedRestaurant(person, value)
+
+        handler_input.response_builder.speak(speech).set_should_end_session(
+            False)
+        return handler_input.response_builder.response
+
+
+class AddDietaryRequirementsIntentHandler(AbstractRequestHandler):
+    """Handler for adding dietary requirements."""
+
+    def can_handle(self, handler_input):
+        # type: (HandlerInput) -> bool
+        return is_intent_name("AddDietaryRequirementsIntent")(handler_input)
+
+    def handle(self, handler_input):
+        # type: (HandlerInput) -> Response
+        logger.info("In AddDietaryRequirementsIntentHandler")
+        person = util.get_resolved_value(
+            handler_input.request_envelope.request, "person")
+        person_say = person + " is"
+        if person is None:
+            person = "you"
+            person_say = "you are"
+        value = util.get_resolved_value(
+            handler_input.request_envelope.request, "dietary_req")
+        speech = ("Okay. I'll remember that {} {}.").format(person_say, value)
+
+        ddb.addDietaryReq(person, value)
+
+        handler_input.response_builder.speak(speech).set_should_end_session(
+            False)
+        return handler_input.response_builder.response
+'''
+class WantAddCuisineIntentHandler(AbstractRequestHandler):
+    """Handler for deciding whether you want to filter by cuisine"""
+    def can_handle(self, handler_input):
+        # type: (HandlerInput) -> bool
+        return is_intent_name("WantAddCuisineIntent")(handler_input)
+
+    def handle(self, handler_input):
+        # type: (HandlerInput) -> Response
+        cuisine.info("In add cuisine intent")
+        person = util.get_resolved_value(
+            handler_input.request_envelope.request, "person")
+        person_say = person + " is"
+        if person is None:
+            person = "you"
+            person_say = "you are"
+        value = util.get_resolved_value(
+            handler_input.request_envelope.request, "dietary_req")
+        speech = ("Okay. I'll remember that {} {}.").format(person_say, value)
+
+        ddb.addDietaryReq(person, value)
+
+        handler_input.response_builder.speak(speech).set_should_end_session(
+            False)
+        return handler_input.response_builder.response
+
+class FilterCuisineIntentHandler(AbstractRequestHandler):
+    """Handler for filtering by cuisine."""
+
+    def can_handle(self, handler_input):
+        # type: (HandlerInput) -> bool
+        return is_intent_name("FilterCuisine")(handler_input)
+
+    def handle(self, handler_input):
+        # type: (HandlerInput) -> Response
+        logger.info("In FilterCuisineIntentHandler")
+        global cuisine
+        cuisine = util.get_resolved_value(
+            handler_input.request_envelope.request, "cuisine")
+        person_say = person + " is"
+        if cuisine is None:
+            cuisine = ""
+        else:
+            value = util.get_resolved_value(
+            handler_input.request_envelope.request, "dietary_req")
+        speech = ("Okay. I'll remember that {} {}.").format(person_say, value)
+
+        ddb.addDietaryReq(person, value)
+
+        handler_input.response_builder.speak(speech).set_should_end_session(
+            False)
+        return handler_input.response_builder.response
+'''
+
 # Add all request handlers to the skill.
 sb.add_request_handler(LaunchRequestHandler())
 sb.add_request_handler(AboutIntentHandler())
@@ -505,6 +727,10 @@ sb.add_request_handler(GetCityIntentHandler())
 #sb.add_request_handler(AddRestaurantCuisineIntentHandler())
 sb.add_request_handler(AddDietaryRequirementsIntentHandler())
 sb.add_request_handler(GetDietaryRequirementsIntentHandler())
+sb.add_request_handler(AddLikedRestaurantsIntentHandler())
+sb.add_request_handler(GetLikedRestaurantsIntentHandler())
+sb.add_request_handler(AddDislikedRestaurantsIntentHandler())
+sb.add_request_handler(GetDislikedRestaurantsIntentHandler())
 sb.add_request_handler(YesMoreInfoIntentHandler())
 sb.add_request_handler(NoMoreInfoIntentHandler())
 sb.add_request_handler(HelpIntentHandler())
@@ -512,7 +738,8 @@ sb.add_request_handler(FallbackIntentHandler())
 sb.add_request_handler(ExitIntentHandler())
 sb.add_request_handler(SessionEndedRequestHandler())
 sb.add_request_handler(SearchRestaurantsIntentHandler())
-#sb.add_request_handler(MoreInfoIntentHandler())
+sb.add_request_handler(SearchRestaurantsWithFriendIntentHandler())
+sb.add_request_handler(MoreInfoIntentHandler())
 sb.add_request_handler(AnotherRestaurantsIntentHandler())
 
 # Add exception handler to the skill.
